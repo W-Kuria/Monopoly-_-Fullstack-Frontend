@@ -3,7 +3,6 @@ import gameService from '../services/gameService';
 import Board from './Board';
 import PlayerStats from './PlayerStats';
 import GameStatus from './GameStatus';
-import Game from '../dice'; // Import existing dice component
 import Draw_card from '../Card'; // Import existing card component
 import { formatCurrency, passedGO, GO_MONEY } from '../utils/gameUtils';
 import './GamePage.css';
@@ -56,6 +55,13 @@ function GamePage({ gameId, playerId, onLeaveGame }) {
         if (passedGO(oldPosition, result.newPosition)) {
           alert(`You passed GO! Collect ${formatCurrency(GO_MONEY)}`);
         }
+        
+        // Trigger card drawing for specific positions
+        const cardPositions = [2, 7, 17, 22, 33, 36];
+        if (cardPositions.includes(result.newPosition)) {
+          setCardTriggered(true);
+          setTimeout(() => setCardTriggered(false), 3000);
+        }
       }
       
       // Update game state with backend response
@@ -84,6 +90,12 @@ function GamePage({ gameId, playerId, onLeaveGame }) {
 
   // Handle property click
   const handlePropertyClick = (property) => {
+    // Check if property is already owned
+    const ownedProperty = gameState.properties?.find(p => p.id === property.id && p.owner);
+    if (ownedProperty) {
+      alert(`This property is already owned by ${ownedProperty.ownerName || 'another player'}`);
+      return;
+    }
     setSelectedProperty(property);
     setShowPropertyModal(true);
   };
@@ -173,7 +185,7 @@ function GamePage({ gameId, playerId, onLeaveGame }) {
               <div className="die">{diceValue[0]}</div>
               <div className="die">{diceValue[1]}</div>
             </div>
-            <Game playerId={playerId} /> {/* Use existing dice component */}
+
             <button 
               onClick={rollDice} 
               disabled={isRolling}
