@@ -1,16 +1,67 @@
-# React + Vite
+# Monopoly Game - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React-based frontend for a multiplayer Monopoly game. This is the frontend component of a fullstack Monopoly application.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Game Lobby**: Create or join games with other players
+- **Interactive Board**: Visual representation of the Monopoly board
+- **Real-time Communication**: Connects to Flask backend for game state management
+- **Dice Rolling**: Animated dice with backend synchronization
+- **Property Management**: Buy properties and track ownership
+- **Demo Mode**: Play offline without backend connection
 
-## React Compiler
+## Project Structure
 
-The React Compiler is not enabled on this template. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```
+src/
+├── components/
+│   ├── GameLobby.jsx     # Game creation and joining
+│   ├── GamePage.jsx      # Main game interface
+│   └── *.css            # Component styles
+├── services/
+│   └── gameService.js    # Backend API communication
+└── App.jsx              # Main app component
+```
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+2. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+3. Open your browser to `http://localhost:5173`
+
+## Backend Integration
+
+This frontend expects a Flask backend running on `http://localhost:5000` with the following endpoints:
+
+- `POST /game/create` - Create new game
+- `POST /game/{id}/join` - Join existing game
+- `GET /game/{id}` - Get game state
+- `POST /game/{id}/roll-dice` - Roll dice
+- `POST /game/{id}/buy-property` - Buy property
+
+## Demo Mode
+
+If the backend is not available, you can use Demo Mode to test the frontend functionality offline.
+
+## Team Integration
+
+This frontend is designed to work with:
+- **Backend Team**: Flask API for game logic
+- **Database Team**: Supabase integration through backend
+- **Authentication Team**: JWT token handling
+
+## Built With
+
+- React 19
+- Vite
+- CSS3 (Grid & Flexbox)
+- Fetch API for HTTP requests
