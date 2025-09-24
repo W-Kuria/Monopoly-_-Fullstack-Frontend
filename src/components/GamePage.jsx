@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import gameService from '../services/gameService';
 import './GamePage.css';
 
-function GamePage() {
+function GamePage({ gameId, playerId, onLeaveGame }) {
   // Game state - this will hold all the important game information
   const [gameState, setGameState] = useState({
     players: [],
@@ -42,17 +42,17 @@ function GamePage() {
     
     try {
       // Call backend to roll dice
-      const gameId = localStorage.getItem('currentGameId') || 'demo-game';
-      const playerId = localStorage.getItem('playerId') || 'player-1';
+      const currentGameId = gameId || localStorage.getItem('currentGameId') || 'demo-game';
+      const currentPlayerId = playerId || localStorage.getItem('playerId') || 'player-1';
       
-      const result = await gameService.rollDice(gameId, playerId);
+      const result = await gameService.rollDice(currentGameId, currentPlayerId);
       
       // Update dice display with backend result
       setDiceValue([result.dice1, result.dice2]);
       
       // Move player based on backend calculation
       if (result.newPosition !== undefined) {
-        updatePlayerPosition(playerId, result.newPosition);
+        updatePlayerPosition(currentPlayerId, result.newPosition);
       }
       
       // Update game state with backend response
@@ -82,10 +82,10 @@ function GamePage() {
   // Function to buy property
   const buyProperty = async (propertyId) => {
     try {
-      const gameId = localStorage.getItem('currentGameId') || 'demo-game';
-      const playerId = localStorage.getItem('playerId') || 'player-1';
+      const currentGameId = gameId || localStorage.getItem('currentGameId') || 'demo-game';
+      const currentPlayerId = playerId || localStorage.getItem('playerId') || 'player-1';
       
-      const result = await gameService.buyProperty(gameId, playerId, propertyId);
+      const result = await gameService.buyProperty(currentGameId, currentPlayerId, propertyId);
       
       if (result.success) {
         // Update game state with new property ownership
@@ -104,9 +104,9 @@ function GamePage() {
   useEffect(() => {
     const loadGameState = async () => {
       try {
-        const gameId = localStorage.getItem('currentGameId');
-        if (gameId) {
-          const state = await gameService.getGameState(gameId);
+        const currentGameId = gameId || localStorage.getItem('currentGameId');
+        if (currentGameId) {
+          const state = await gameService.getGameState(currentGameId);
           setGameState(state);
           
           // Set player positions if available
@@ -134,7 +134,15 @@ function GamePage() {
 
   return (
     <div className="game-page">
-      <h1>Monopoly Game</h1>
+      <div className="game-header">
+        <h1>Monopoly Game</h1>
+        <div className="game-info">
+          <span>Game ID: {gameId}</span>
+          <button onClick={onLeaveGame} className="leave-button">
+            Leave Game
+          </button>
+        </div>
+      </div>
       
       {/* Game Board */}
       <div className="game-board">
