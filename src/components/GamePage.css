@@ -164,3 +164,35 @@
   color: #28a745;
   font-weight: bold;
 }
+
+.players-on-space {
+  display: flex;
+  gap: 2px;
+  margin-top: 5px;
+  justify-content: center;
+}
+
+.player-token {
+  font-size: 16px;
+}
+
+.buy-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 4px 8px;
+  font-size: 10px;
+  cursor: pointer;
+  margin-top: 5px;
+  transition: background-color 0.3s;
+}
+
+.buy-button:hover {
+  background-color: #218838;
+}
+
+.buy-button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
