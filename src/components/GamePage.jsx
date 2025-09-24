@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import gameService from '../services/gameService';
 import Board from './Board';
+import PlayerStats from './PlayerStats';
+import GameStatus from './GameStatus';
 import Game from '../dice'; // Import existing dice component
 import Draw_card from '../Card'; // Import existing card component
+import { formatCurrency, passedGO, GO_MONEY } from '../utils/gameUtils';
 import './GamePage.css';
 
 function GamePage({ gameId, playerId, onLeaveGame }) {
@@ -46,7 +49,13 @@ function GamePage({ gameId, playerId, onLeaveGame }) {
       
       // Move player based on backend calculation
       if (result.newPosition !== undefined) {
+        const oldPosition = playerPositions[currentPlayerId] || 0;
         updatePlayerPosition(currentPlayerId, result.newPosition);
+        
+        // Check if player passed GO
+        if (passedGO(oldPosition, result.newPosition)) {
+          alert(`You passed GO! Collect ${formatCurrency(GO_MONEY)}`);
+        }
       }
       
       // Update game state with backend response
@@ -156,6 +165,8 @@ function GamePage({ gameId, playerId, onLeaveGame }) {
         
         {/* Game Controls */}
         <div className="game-controls">
+          <GameStatus gameState={gameState} gameId={gameId} />
+          
           <div className="dice-section">
             <h3>Your Turn</h3>
             <div className="dice-display">
@@ -171,41 +182,14 @@ function GamePage({ gameId, playerId, onLeaveGame }) {
               {isRolling ? "Rolling..." : "Roll Dice (Backend)"}
             </button>
           </div>
-          
-          {/* Current Player Info */}
-          <div className="current-player-info">
-            <h4>Current Player</h4>
-            {gameState.players.length > 0 && gameState.currentPlayer < gameState.players.length ? (
-              <div className="player-details">
-                <span className="player-name">
-                  {gameState.players[gameState.currentPlayer].name}
-                </span>
-                <span className="player-money">
-                  ${gameState.players[gameState.currentPlayer].money || 1500}
-                </span>
-              </div>
-            ) : (
-              <p>Waiting for players...</p>
-            )}
-          </div>
         </div>
       </div>
 
-      {/* Player Info Panel */}
-      <div className="player-info">
-        <h3>Players</h3>
-        {gameState.players.length === 0 ? (
-          <p>No players joined yet</p>
-        ) : (
-          gameState.players.map((player, index) => (
-            <div key={index} className={`player-card ${index === gameState.currentPlayer ? 'active' : ''}`}>
-              <span>{player.name}</span>
-              <span>${player.money || 1500}</span>
-              {index === gameState.currentPlayer && <span className="turn-indicator">🎯</span>}
-            </div>
-          ))
-        )}
-      </div>
+      {/* Player Stats Panel */}
+      <PlayerStats 
+        gameState={gameState} 
+        currentPlayerId={playerId}
+      />
       
       {/* Property Purchase Modal */}
       {showPropertyModal && selectedProperty && (

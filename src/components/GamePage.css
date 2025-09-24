@@ -123,79 +123,9 @@
   cursor: not-allowed;
 }
 
-.current-player-info {
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
+/* Current player info moved to GameStatus component */
 
-.current-player-info h4 {
-  margin: 0 0 15px 0;
-  color: #2c3e50;
-}
-
-.player-details {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.player-name {
-  font-weight: bold;
-  font-size: 18px;
-  color: #2c3e50;
-}
-
-.player-money {
-  font-size: 16px;
-  color: #28a745;
-  font-weight: bold;
-}
-
-.player-info {
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  min-width: 300px;
-}
-
-.player-info h3 {
-  color: #2c3e50;
-  margin-bottom: 15px;
-  text-align: center;
-}
-
-.player-card {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-  margin-bottom: 10px;
-  background-color: #f8f9fa;
-  border-radius: 5px;
-  border-left: 4px solid #3498db;
-}
-
-.player-card span:first-child {
-  font-weight: bold;
-}
-
-.player-card span:last-child {
-  color: #28a745;
-  font-weight: bold;
-}
-
-.player-card.active {
-  background-color: #e8f5e8;
-  border-left-color: #28a745;
-  transform: scale(1.02);
-}
-
-.turn-indicator {
-  font-size: 16px;
-  margin-left: 10px;
-}
+/* Player info styles moved to PlayerStats.css */
 
 .players-on-space {
   display: flex;
