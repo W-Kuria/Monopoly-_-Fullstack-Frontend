@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 import gameService from '../services/gameService';
+import Board from './Board';
+import Game from '../dice'; // Import existing dice component
+import Draw_card from '../Card'; // Import existing card component
 import './GamePage.css';
 
 function GamePage({ gameId, playerId, onLeaveGame }) {
@@ -18,21 +21,12 @@ function GamePage({ gameId, playerId, onLeaveGame }) {
   const [diceValue, setDiceValue] = useState([1, 1]);
   const [isRolling, setIsRolling] = useState(false);
 
-  // Simple Monopoly board properties (just the basics for now)
-  const boardSpaces = [
-    { id: 0, name: "GO", type: "special" },
-    { id: 1, name: "Mediterranean Ave", type: "property", price: 60, color: "brown" },
-    { id: 2, name: "Community Chest", type: "special" },
-    { id: 3, name: "Baltic Ave", type: "property", price: 60, color: "brown" },
-    { id: 4, name: "Income Tax", type: "special" },
-    { id: 5, name: "Reading Railroad", type: "railroad", price: 200 },
-    { id: 6, name: "Oriental Ave", type: "property", price: 100, color: "lightblue" },
-    { id: 7, name: "Chance", type: "special" },
-    { id: 8, name: "Vermont Ave", type: "property", price: 100, color: "lightblue" },
-    { id: 9, name: "Connecticut Ave", type: "property", price: 120, color: "lightblue" },
-    { id: 10, name: "Jail", type: "special" },
-    // Add more spaces as needed - keeping it simple for now
-  ];
+  // Card drawing trigger state
+  const [cardTriggered, setCardTriggered] = useState(false);
+  
+  // Property purchase modal
+  const [selectedProperty, setSelectedProperty] = useState(null);
+  const [showPropertyModal, setShowPropertyModal] = useState(false);
 
   // Function to roll dice - now with backend communication
   const rollDice = async () => {
@@ -79,6 +73,12 @@ function GamePage({ gameId, playerId, onLeaveGame }) {
     }));
   };
 
+  // Handle property click
+  const handlePropertyClick = (property) => {
+    setSelectedProperty(property);
+    setShowPropertyModal(true);
+  };
+  
   // Function to buy property
   const buyProperty = async (propertyId) => {
     try {
@@ -90,6 +90,7 @@ function GamePage({ gameId, playerId, onLeaveGame }) {
       if (result.success) {
         // Update game state with new property ownership
         setGameState(result.gameState);
+        setShowPropertyModal(false);
         alert(`Property purchased successfully!`);
       } else {
         alert(result.message || 'Failed to purchase property');
@@ -144,56 +145,49 @@ function GamePage({ gameId, playerId, onLeaveGame }) {
         </div>
       </div>
       
-      {/* Game Board */}
-      <div className="game-board">
-        <div className="board-center">
-          <h2>MONOPOLY</h2>
-          
-          {/* Dice Section */}
+      {/* Main Game Area */}
+      <div className="game-main">
+        {/* Game Board */}
+        <Board 
+          playerPositions={playerPositions}
+          onPropertyClick={handlePropertyClick}
+          gameState={gameState}
+        />
+        
+        {/* Game Controls */}
+        <div className="game-controls">
           <div className="dice-section">
-            <div className="dice">
+            <h3>Your Turn</h3>
+            <div className="dice-display">
               <div className="die">{diceValue[0]}</div>
               <div className="die">{diceValue[1]}</div>
             </div>
+            <Game playerId={playerId} /> {/* Use existing dice component */}
             <button 
               onClick={rollDice} 
               disabled={isRolling}
               className="roll-button"
             >
-              {isRolling ? "Rolling..." : "Roll Dice"}
+              {isRolling ? "Rolling..." : "Roll Dice (Backend)"}
             </button>
           </div>
-        </div>
-
-        {/* Board Spaces - Now with buy functionality */}
-        <div className="board-spaces">
-          {boardSpaces.map(space => (
-            <div key={space.id} className={`board-space ${space.type}`}>
-              <div className="space-name">{space.name}</div>
-              {space.price && <div className="space-price">${space.price}</div>}
-              
-              {/* Show players on this space */}
-              <div className="players-on-space">
-                {Object.entries(playerPositions).map(([playerId, position]) => 
-                  position === space.id ? (
-                    <div key={playerId} className="player-token">
-                      {playerId === 'player-1' ? '🔴' : '🔵'}
-                    </div>
-                  ) : null
-                )}
+          
+          {/* Current Player Info */}
+          <div className="current-player-info">
+            <h4>Current Player</h4>
+            {gameState.players.length > 0 && gameState.currentPlayer < gameState.players.length ? (
+              <div className="player-details">
+                <span className="player-name">
+                  {gameState.players[gameState.currentPlayer].name}
+                </span>
+                <span className="player-money">
+                  ${gameState.players[gameState.currentPlayer].money || 1500}
+                </span>
               </div>
-              
-              {/* Buy button for properties */}
-              {space.type === 'property' && (
-                <button 
-                  className="buy-button"
-                  onClick={() => buyProperty(space.id)}
-                >
-                  Buy
-                </button>
-              )}
-            </div>
-          ))}
+            ) : (
+              <p>Waiting for players...</p>
+            )}
+          </div>
         </div>
       </div>
 
@@ -204,13 +198,41 @@ function GamePage({ gameId, playerId, onLeaveGame }) {
           <p>No players joined yet</p>
         ) : (
           gameState.players.map((player, index) => (
-            <div key={index} className="player-card">
+            <div key={index} className={`player-card ${index === gameState.currentPlayer ? 'active' : ''}`}>
               <span>{player.name}</span>
               <span>${player.money || 1500}</span>
+              {index === gameState.currentPlayer && <span className="turn-indicator">🎯</span>}
             </div>
           ))
         )}
       </div>
+      
+      {/* Property Purchase Modal */}
+      {showPropertyModal && selectedProperty && (
+        <div className="modal-overlay" onClick={() => setShowPropertyModal(false)}>
+          <div className="property-modal" onClick={(e) => e.stopPropagation()}>
+            <h3>{selectedProperty.name}</h3>
+            <p>Price: ${selectedProperty.price}</p>
+            <div className="modal-buttons">
+              <button 
+                onClick={() => buyProperty(selectedProperty.id)}
+                className="buy-btn"
+              >
+                Buy Property
+              </button>
+              <button 
+                onClick={() => setShowPropertyModal(false)}
+                className="cancel-btn"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Card Component */}
+      <Draw_card triggered={cardTriggered} />
     </div>
   );
 }

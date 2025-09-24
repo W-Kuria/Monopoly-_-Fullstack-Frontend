@@ -50,41 +50,38 @@
   background-color: #c0392b;
 }
 
-.game-board {
+.game-main {
   display: flex;
-  position: relative;
-  width: 600px;
-  height: 600px;
-  background-color: #e8f5e8;
-  border: 3px solid #2c3e50;
-  border-radius: 10px;
+  gap: 30px;
+  align-items: flex-start;
   margin-bottom: 20px;
 }
 
-.board-center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
+.game-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 250px;
+}
+
+.dice-section {
   background-color: white;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  text-align: center;
 }
 
-.board-center h2 {
-  color: #e74c3c;
-  font-size: 24px;
-  margin-bottom: 20px;
-  font-weight: bold;
+.dice-section h3 {
+  margin: 0 0 15px 0;
+  color: #2c3e50;
 }
 
-.dice-section {
+.dice-display {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 15px;
 }
 
 .dice {
@@ -126,46 +123,32 @@
   cursor: not-allowed;
 }
 
-.board-spaces {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 5px;
+.current-player-info {
+  background-color: white;
   padding: 20px;
-  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-.board-space {
-  background-color: white;
-  border: 1px solid #2c3e50;
-  border-radius: 5px;
-  padding: 8px;
-  text-align: center;
-  min-height: 60px;
+.current-player-info h4 {
+  margin: 0 0 15px 0;
+  color: #2c3e50;
+}
+
+.player-details {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  gap: 10px;
 }
 
-.board-space.property {
-  background-color: #fff3cd;
-}
-
-.board-space.special {
-  background-color: #d1ecf1;
-}
-
-.board-space.railroad {
-  background-color: #f8d7da;
-}
-
-.space-name {
-  font-size: 12px;
+.player-name {
   font-weight: bold;
-  margin-bottom: 5px;
+  font-size: 18px;
+  color: #2c3e50;
 }
 
-.space-price {
-  font-size: 10px;
+.player-money {
+  font-size: 16px;
   color: #28a745;
   font-weight: bold;
 }
@@ -203,6 +186,17 @@
   font-weight: bold;
 }
 
+.player-card.active {
+  background-color: #e8f5e8;
+  border-left-color: #28a745;
+  transform: scale(1.02);
+}
+
+.turn-indicator {
+  font-size: 16px;
+  margin-left: 10px;
+}
+
 .players-on-space {
   display: flex;
   gap: 2px;
@@ -233,4 +227,98 @@
 .buy-button:disabled {
   background-color: #6c757d;
   cursor: not-allowed;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.property-modal {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  min-width: 300px;
+}
+
+.property-modal h3 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+.property-modal p {
+  font-size: 18px;
+  color: #28a745;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.buy-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.buy-btn:hover {
+  background-color: #218838;
+}
+
+.cancel-btn {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cancel-btn:hover {
+  background-color: #545b62;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .game-main {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .game-controls {
+    flex-direction: row;
+    min-width: auto;
+    width: 100%;
+    max-width: 700px;
+  }
+}
+
+@media (max-width: 768px) {
+  .game-controls {
+    flex-direction: column;
+  }
+  
+  .property-modal {
+    margin: 20px;
+    min-width: auto;
+  }
 }
