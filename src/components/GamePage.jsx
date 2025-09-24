@@ -74,7 +74,26 @@ function GamePage({ gameId, playerId, onLeaveGame }) {
       // Fallback to local dice roll if backend fails
       const dice1 = Math.floor(Math.random() * 6) + 1;
       const dice2 = Math.floor(Math.random() * 6) + 1;
+      const diceSum = dice1 + dice2;
       setDiceValue([dice1, dice2]);
+      
+      // Update position locally in demo mode
+      const currentPlayerId = playerId || localStorage.getItem('playerId') || 'player-1';
+      const oldPosition = playerPositions[currentPlayerId] || 0;
+      const newPosition = (oldPosition + diceSum) % 40;
+      updatePlayerPosition(currentPlayerId, newPosition);
+      
+      // Check if player passed GO
+      if (passedGO(oldPosition, newPosition)) {
+        alert(`You passed GO! Collect ${formatCurrency(GO_MONEY)}`);
+      }
+      
+      // Trigger card drawing for specific positions
+      const cardPositions = [2, 7, 17, 22, 33, 36];
+      if (cardPositions.includes(newPosition)) {
+        setCardTriggered(true);
+        setTimeout(() => setCardTriggered(false), 3000);
+      }
     } finally {
       setIsRolling(false);
     }
@@ -118,7 +137,26 @@ function GamePage({ gameId, playerId, onLeaveGame }) {
       }
     } catch (error) {
       console.error('Failed to buy property:', error);
-      alert('Error purchasing property');
+      // Demo mode property purchase
+      const currentPlayerId = playerId || localStorage.getItem('playerId') || 'player-1';
+      const currentPlayer = gameState.players.find(p => p.id === currentPlayerId);
+      
+      if (currentPlayer && currentPlayer.money >= selectedProperty.price) {
+        // Update game state locally
+        setGameState(prev => ({
+          ...prev,
+          players: prev.players.map(p => 
+            p.id === currentPlayerId 
+              ? { ...p, money: p.money - selectedProperty.price }
+              : p
+          ),
+          properties: [...prev.properties, { ...selectedProperty, owner: currentPlayerId }]
+        }));
+        setShowPropertyModal(false);
+        alert(`Property purchased successfully! (Demo Mode)`);
+      } else {
+        alert('Not enough money to buy this property!');
+      }
     }
   };
 
@@ -147,6 +185,12 @@ function GamePage({ gameId, playerId, onLeaveGame }) {
           currentPlayer: 0,
           properties: [],
           gameStarted: true
+        });
+        
+        // Initialize player positions
+        setPlayerPositions({
+          'player-1': 0,
+          'player-2': 0
         });
       }
     };
