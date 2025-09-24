@@ -121,13 +121,14 @@ export const getNextPlayer = (gameState) => {
 
 // Check if game is over (only one player not bankrupt)
 export const isGameOver = (gameState) => {
+  if (!gameState.players || gameState.players.length === 0) return false;
   const activePlayers = gameState.players.filter(p => p.money > 0);
   return activePlayers.length <= 1;
 };
 
 // Get winner of the game
 export const getWinner = (gameState) => {
-  if (!isGameOver(gameState)) return null;
+  if (!isGameOver(gameState) || !gameState.players || gameState.players.length === 0) return null;
   
   const activePlayers = gameState.players.filter(p => p.money > 0);
   if (activePlayers.length === 1) {
@@ -135,6 +136,8 @@ export const getWinner = (gameState) => {
   }
   
   // If no active players, return richest player
+  if (gameState.players.length === 0) return null;
+  
   return gameState.players.reduce((richest, player) => 
     calculatePlayerWorth(gameState, player.id) > calculatePlayerWorth(gameState, richest.id) 
       ? player : richest
