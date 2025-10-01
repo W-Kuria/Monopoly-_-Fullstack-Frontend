@@ -1,4 +1,4 @@
-import supabase from "../SUpabaseclient"; 
+import supabase from "../Supabaseclient"; 
 
 export async function sendToJail(gameId, playerId) {
   const { error } = await supabase

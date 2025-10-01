@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import supabase from "../SUpabaseclient";
+import supabase from "../Supabaseclient";
 import { sendToJail } from "./Jail";     
 
 function Game({playerId,gameId}){
