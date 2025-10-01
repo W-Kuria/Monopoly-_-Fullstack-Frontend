@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import supabase from "../SUpabaseclient";
+import SendToJail from "./Jail";
 
 
 function Game({playerId}){
@@ -33,18 +34,25 @@ function Game({playerId}){
     }
     const currentPosition = data.position || 0;
     const newPosition = (currentPosition + sum) % 40;
-    const { error: updateError } = await supabase
+    // jail time
+    if (newPosition === 30 ){
+      await SendToJai(playerId) 
+    }
+    else{
+      const { error: updateError } = await supabase
       .from("players")
       .update({ position: newPosition })
       .eq("id", playerId);
       if (updateError) {
       console.error("Failed to update position", updateError);
     } else {
-      alert(`You rolled ${newNumber1} and ${newNumber2}. New position: ${sum}`);
+      // shows the position of player not sum when successfull
+      alert(`You rolled ${newNumber1} and ${newNumber2}. New position: ${newPosition}`);
     }
+  }
+    
    
    if(newNumber1===newNumber2){
-    
     alert(`You have rolled the same number on both dices!Please roll again!`);
     setTimeout(()=>{
       rollDice();
