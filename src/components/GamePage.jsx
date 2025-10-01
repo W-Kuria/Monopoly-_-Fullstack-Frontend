@@ -5,7 +5,7 @@ import PlayerStats from './PlayerStats';
 import GameStatus from './GameStatus';
 import Draw_card from '../Card'; // Import existing card component
 import { formatCurrency, passedGO, GO_MONEY } from '../utils/gameUtils';
-import './GamePage.css';
+import './style/GamePage.css';
 
 function GamePage({ gameId, playerId, onLeaveGame }) {
   // Game state - this will hold all the important game information

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { getPlayerProperties, calculatePlayerWorth, formatCurrency } from '../utils/gameUtils';
-import './PlayerStats.css';
+import './style/PlayerStats.css';
 
 function PlayerStats({ gameState, currentPlayerId }) {
   const [selectedPlayer, setSelectedPlayer] = useState(null);

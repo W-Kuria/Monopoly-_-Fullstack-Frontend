@@ -1,5 +1,5 @@
 import { formatCurrency, isGameOver, getWinner } from '../utils/gameUtils';
-import './GameStatus.css';
+import './style/GameStatus.css';
 
 function GameStatus({ gameState, gameId }) {
   const winner = getWinner(gameState);

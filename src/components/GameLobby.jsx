@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import gameService from '../services/gameService';
-import './GameLobby.css';
+import './style/GameLobby.css';
 
 function GameLobby({ onJoinGame }) {
   const [playerName, setPlayerName] = useState('');

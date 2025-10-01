@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import './Board.css';
+import './style/Board.css';
 
 function Board({ playerPositions, onPropertyClick, gameState }) {
   // Complete Monopoly board layout (40 spaces)
