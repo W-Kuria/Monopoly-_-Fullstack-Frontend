@@ -3,7 +3,7 @@ import supabase from "../Supabaseclient";
 import Communitychest from "./Chest";
 import Chance from "./Chance";
 
-function Draw_card({triggered}){  
+function Draw_card({triggered,playerId}){  
     const[showChancecard,setshowChancecard]=useState(false);
     const[showCommunitychestcard,setshowCommunitychestcard]=useState(false)  
     useEffect(()=>{
@@ -41,8 +41,8 @@ function Draw_card({triggered}){
     },[triggered]);
     return(
         <div>
-           {showChancecard&&<Chance triggered={true} />} 
-           {showCommunitychestcard&&<Communitychest triggered={true} />}
+           {showChancecard&&<Chance triggered={true} playerId={playerId}/>} 
+           {showCommunitychestcard&&<Communitychest triggered={true} playerId={playerId} />}
         </div>
     )
 
