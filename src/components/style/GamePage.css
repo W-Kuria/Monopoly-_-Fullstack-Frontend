@@ -200,7 +200,7 @@
   justify-content: center;
 }
 
-.buy-btn {
+.btn {
   background-color: #28a745;
   color: white;
   border: none;
@@ -210,7 +210,7 @@
   font-weight: bold;
 }
 
-.buy-btn:hover {
+.btn:hover {
   background-color: #218838;
 }
 

@@ -3,8 +3,9 @@ import gameService from '../services/gameService';
 import Board from './Board';
 import PlayerStats from './PlayerStats';
 import GameStatus from './GameStatus';
-import Draw_card from '../Card'; // Import existing card component
+import Draw_card from '../Card'; 
 import { formatCurrency, passedGO, GO_MONEY } from '../utils/gameUtils';
+import { sendToJail, getOutOfJail, payToGetOut } from "../Jail"
 import './style/GamePage.css';
 
 function GamePage({ gameId, playerId, onLeaveGame }) {
@@ -29,6 +30,10 @@ function GamePage({ gameId, playerId, onLeaveGame }) {
   // Property purchase modal
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [showPropertyModal, setShowPropertyModal] = useState(false);
+
+  // jail check
+  const [isInJail, setIsInJail] = useState(false);
+  const [hasJailCard, setHasJailCard] = useState(false);
 
   // Function to roll dice - now with backend communication
   const rollDice = async () => {
@@ -159,6 +164,27 @@ function GamePage({ gameId, playerId, onLeaveGame }) {
       }
     }
   };
+  // player get out of jail chance
+  const handlePayToGetOut = async () => {
+  const success = await payToGetOut(gameId, playerId);
+  if (success) {
+    alert("Paid $50 to get out of jail!");
+    setIsInJail(false);
+    setIsRolling(false);
+  } else {
+    alert("Not enough money to pay bail!");
+  }
+};
+
+const handleChanceCardRelease = async () => {
+  const success = await getOutOfJail(gameId, playerId, "chance_card");
+  if (success) {
+    alert("Used Chance Card to get out of jail!");
+    setIsInJail(false);
+    setHasJailCard(false);
+    setIsRolling(false);
+  }
+};
 
   // Load game state when component mounts
   useEffect(() => {
@@ -197,6 +223,26 @@ function GamePage({ gameId, playerId, onLeaveGame }) {
     
     loadGameState();
   }, []);
+
+  // jail status check
+  useEffect(() => {
+  const checkJailStatus = async () => {
+    if (playerId) {
+      const { data } = await supabase
+        .from('players')
+        .select('in_jail, has_jail_card')
+        .eq('id', playerId)
+        .single();
+      
+      if (data) {
+        setIsInJail(data.in_jail);
+        setHasJailCard(data.has_jail_card);
+      }
+    }
+  };
+  
+  checkJailStatus();
+}, [playerId]);
 
   return (
     <div className="game-page">
@@ -238,7 +284,25 @@ function GamePage({ gameId, playerId, onLeaveGame }) {
               {isRolling ? "Rolling..." : "Roll Dice (Backend)"}
             </button>
           </div>
-        </div>
+        
+         {isInJail && (
+          <div className="jail-options">
+            <h3>You're in Jail!</h3>
+            <button onClick={handlePayToGetOut} className="btn">
+              Pay $50 to Get Out
+            </button>
+
+            <button onClick={() => setIsRolling(false)} className="cancel-btn">Cancel</button>
+            
+            {hasJailCard && (
+              <button onClick={handleChanceCardRelease} className="btn">
+                Use Get Out of Jail Card
+              </button>           
+            
+            )}
+          </div>
+         )}
+        </div>       
       </div>
 
       {/* Player Stats Panel */}
@@ -256,7 +320,7 @@ function GamePage({ gameId, playerId, onLeaveGame }) {
             <div className="modal-buttons">
               <button 
                 onClick={() => buyProperty(selectedProperty.id)}
-                className="buy-btn"
+                className="btn"
               >
                 Buy Property
               </button>
@@ -272,8 +336,7 @@ function GamePage({ gameId, playerId, onLeaveGame }) {
       )}
       
       {/* Card Component */}
-      <Draw_card triggered={cardTriggered} />
-    </div>
+      <Draw_card triggered={cardTriggered} playerId={playerId} />    </div>
   );
 }
 
