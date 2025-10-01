@@ -1,4 +1,6 @@
-async function SendToJail(gameId, playerId) {
+import supabase from "../SUpabaseclient"; 
+
+export async function sendToJail(gameId, playerId) {
   const { error } = await supabase
     .from("players")
     .update({ 
@@ -13,4 +15,3 @@ async function SendToJail(gameId, playerId) {
     console.log("Player sent to jail");
   }
 }
-export default SendToJail

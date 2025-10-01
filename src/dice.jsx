@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import supabase from "../SUpabaseclient";
-import SendToJail from "./Jail";
+import { sendToJail } from "./Jail";     
 
-
-function Game({playerId}){
+function Game({playerId,gameId}){
     const [number1, setNumber1] = useState(null);
     const [number2, setNumber2] = useState(null);
     const[rolling,setRolling]=useState(false);
+    const [doublesCount, setDoublesCount] = useState(0);
 
   const randomNumber = (min, max) => {
     min = Math.ceil(min);
@@ -36,7 +36,9 @@ function Game({playerId}){
     const newPosition = (currentPosition + sum) % 40;
     // jail time
     if (newPosition === 30 ){
-      await SendToJai(playerId) 
+      await sendToJail(gameId,playerId)  
+      setRolling (false)
+      return "Turn over!!"
     }
     else{
       const { error: updateError } = await supabase
@@ -46,21 +48,32 @@ function Game({playerId}){
       if (updateError) {
       console.error("Failed to update position", updateError);
     } else {
-      // shows the position of player not sum when successfull
+      // shows the position of player when successfull
       alert(`You rolled ${newNumber1} and ${newNumber2}. New position: ${newPosition}`);
     }
   }
+
+if(newNumber1===newNumber2){
+    const newCount = doublesCount + 1;
     
-   
-   if(newNumber1===newNumber2){
-    alert(`You have rolled the same number on both dices!Please roll again!`);
-    setTimeout(()=>{
-      rollDice();
-    },2000);
-   }
-   else{
+    if(newCount < 3){
+        alert(`Doubles! Roll again!`);
+        setTimeout(() => {
+            setDoublesCount(newCount);
+            rollDice();
+        }, 2000);
+    }
+    else {
+      await sendToJail(gameId, playerId);  
+      setDoublesCount(0);
+      setRolling(false);
+  }
+}
+
+else{
     alert(`move your piece+ ${sum}`)
     setRolling(false)
+    setDoublesCount(0)
    }
    
   };
