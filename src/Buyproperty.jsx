@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import supabase from "./SUpabaseclient";
 
-function Property({ playerId, position }) {
+function Property({ playerId, triggered }) {
   const [property, setProperty] = useState(null);
   const [player, setPlayer] = useState(null);
 
   useEffect(() => {
-    if (!playerId || position == null) return;
+    if (!playerId || !triggered ) return;
 
     const fetchData = async () => {
      
@@ -21,6 +21,8 @@ function Property({ playerId, position }) {
         return;
       }
       setPlayer(playerData);
+      const position = playerData.position;
+
 
       
       const { data: propertyData, error: propertyError } = await supabase
@@ -38,7 +40,7 @@ function Property({ playerId, position }) {
       if (propertyData) {
         if (!propertyData.owner_id) {
         
-          if (playerData.laps >= 1 && playerData.balance >= propertyData.price) {
+          if (playerData.laps >= 1 && playerData.money >= propertyData.price) {
             const confirmBuy = window.confirm(
               `Do you want to buy this property for $${propertyData.price}?`
             );
@@ -69,7 +71,7 @@ function Property({ playerId, position }) {
               .eq("id", playerId);
             const { data: owner } = await supabase
               .from("players")
-              .select("balance")
+              .select("money")
               .eq("id", propertyData.owner_id)
               .single();
 
@@ -101,9 +103,9 @@ function Property({ playerId, position }) {
     };
 
     fetchData();
-  }, [playerId, position]);
+  }, [playerId, triggered]);
 
-  if (!property) return null;
+  if (!property ||!triggered) return null;
 
   return (
     <div>
