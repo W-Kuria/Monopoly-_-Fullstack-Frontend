@@ -1,0 +1,240 @@
+.player-stats {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  min-width: 300px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.player-stats h3 {
+  color: #2c3e50;
+  margin: 0 0 20px 0;
+  text-align: center;
+  border-bottom: 2px solid #e9ecef;
+  padding-bottom: 10px;
+}
+
+.players-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.player-stat-card {
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.player-stat-card:hover {
+  border-color: #3498db;
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
+}
+
+.player-summary {
+  padding: 15px;
+  cursor: pointer;
+  background-color: #f8f9fa;
+  transition: background-color 0.3s;
+}
+
+.player-summary:hover {
+  background-color: #e9ecef;
+}
+
+.player-summary.current-user {
+  background-color: #e8f5e8;
+  border-left: 4px solid #28a745;
+}
+
+.player-summary.active-turn {
+  background-color: #fff3cd;
+  border-left: 4px solid #ffc107;
+}
+
+.player-summary.current-user.active-turn {
+  background-color: #d4edda;
+  border-left: 4px solid #28a745;
+}
+
+.player-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.player-name {
+  font-weight: bold;
+  font-size: 16px;
+  color: #2c3e50;
+}
+
+.player-money {
+  font-size: 16px;
+  font-weight: bold;
+  color: #28a745;
+}
+
+.player-stats-summary {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #6c757d;
+}
+
+.properties-count {
+  font-weight: 500;
+}
+
+.total-worth {
+  font-weight: 500;
+  color: #17a2b8;
+}
+
+.player-details {
+  padding: 20px;
+  background-color: white;
+  border-top: 1px solid #e9ecef;
+}
+
+.player-details h4 {
+  color: #2c3e50;
+  margin: 0 0 15px 0;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.no-properties {
+  color: #6c757d;
+  font-style: italic;
+  text-align: center;
+  padding: 10px;
+}
+
+.properties-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.property-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 5px;
+  border-left: 4px solid #ddd;
+  background-color: #f8f9fa;
+}
+
+.property-item.brown { border-left-color: #8B4513; }
+.property-item.lightblue { border-left-color: #87CEEB; }
+.property-item.pink { border-left-color: #FF69B4; }
+.property-item.orange { border-left-color: #FFA500; }
+.property-item.red { border-left-color: #FF0000; }
+.property-item.yellow { border-left-color: #FFFF00; }
+.property-item.green { border-left-color: #00FF00; }
+.property-item.darkblue { border-left-color: #0000FF; }
+.property-item.special { border-left-color: #6c757d; }
+
+.property-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.property-value {
+  font-size: 12px;
+  color: #28a745;
+  font-weight: bold;
+}
+
+.wealth-breakdown {
+  border-top: 1px solid #e9ecef;
+  padding-top: 15px;
+}
+
+.wealth-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  font-size: 14px;
+}
+
+.wealth-item.total {
+  border-top: 1px solid #e9ecef;
+  margin-top: 10px;
+  padding-top: 10px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.wealth-item span:first-child {
+  color: #6c757d;
+}
+
+.wealth-item span:last-child {
+  color: #28a745;
+  font-weight: 500;
+}
+
+.wealth-item.total span:last-child {
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+.no-players {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6c757d;
+}
+
+.no-players p {
+  margin: 0;
+  font-style: italic;
+}
+
+/* Scrollbar styling */
+.player-stats::-webkit-scrollbar {
+  width: 6px;
+}
+
+.player-stats::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.player-stats::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.player-stats::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .player-stats {
+    min-width: auto;
+    max-height: 400px;
+  }
+  
+  .player-summary {
+    padding: 12px;
+  }
+  
+  .player-details {
+    padding: 15px;
+  }
+  
+  .property-item {
+    padding: 6px 10px;
+  }
+}

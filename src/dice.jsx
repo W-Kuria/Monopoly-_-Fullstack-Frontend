@@ -1,13 +1,12 @@
-import React, { useState } from "react";
-import supabase from "./SUpabaseclient";
-import Draw_card from "./Card";
-import Property from "./Buyproperty";
+import React, { useEffect, useState } from "react";
+import supabase from "../Supabaseclient";
+import { sendToJail } from "./Jail";     
 
-function Game({ playerId }) {
-  const [number1, setNumber1] = useState(null);
-  const [number2, setNumber2] = useState(null);
-  const [rolling, setRolling] = useState(false);
-  const [triggerCard, setTriggerCard] = useState(false);
+function Game({playerId,gameId}){
+    const [number1, setNumber1] = useState(null);
+    const [number2, setNumber2] = useState(null);
+    const[rolling,setRolling]=useState(false);
+    const [doublesCount, setDoublesCount] = useState(0);
 
   const randomNumber = (min, max) => {
     min = Math.ceil(min);
@@ -35,8 +34,14 @@ function Game({ playerId }) {
 
     const currentPosition = data.position || 0;
     const newPosition = (currentPosition + sum) % 40;
-
-    const { error: updateError } = await supabase
+    // jail time
+    if (newPosition === 30 ){
+      await sendToJail(gameId,playerId)  
+      setRolling (false)
+      return "Turn over!!"
+    }
+    else{
+      const { error: updateError } = await supabase
       .from("players")
       .update({ position: newPosition })
       .eq("id", playerId);
@@ -44,21 +49,34 @@ function Game({ playerId }) {
     if (updateError) {
       console.error("Failed to update position", updateError);
     } else {
-      alert(`You rolled ${newNumber1} and ${newNumber2}. New position: ${sum}`);
+      // shows the position of player when successfull
+      alert(`You rolled ${newNumber1} and ${newNumber2}. New position: ${newPosition}`);
     }
+  }
 
-   
-    setTriggerCard(true);
-
-    if (newNumber1 === newNumber2) {
-      alert(`You rolled doubles! Roll again in 2 seconds...`);
-      setTimeout(() => {
-        rollDice();
-      }, 2000);
-    } else {
-      alert(`Move your piece ${sum} spaces`);
+if(newNumber1===newNumber2){
+    const newCount = doublesCount + 1;
+    
+    if(newCount < 3){
+        alert(`Doubles! Roll again!`);
+        setTimeout(() => {
+            setDoublesCount(newCount);
+            rollDice();
+        }, 2000);
+    }
+    else {
+      await sendToJail(gameId, playerId);  
+      setDoublesCount(0);
       setRolling(false);
-    }
+  }
+}
+
+else{
+    alert(`move your piece+ ${sum}`)
+    setRolling(false)
+    setDoublesCount(0)
+   }
+   
   };
 
   const handleRolling = () => {
@@ -80,5 +98,3 @@ function Game({ playerId }) {
     </div>
   );
 }
-
-export default Game;
