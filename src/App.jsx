@@ -1,19 +1,26 @@
-import React, { useState } from "react";
-import Game from "./dice";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+// Import your main components
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import WelcomePage from "./pages/WelcomePage";
+import GamePage from "./pages/GamePage";
+import Game from "./components/dice"; // formerly dice.jsx → renamed Game.jsx
 
 function App() {
-
-  const [currentPlayerId, setCurrentPlayerId] = useState(1);
-
-  const switchTurn = () => {
-    setCurrentPlayerId((prev) => (prev === 1 ? 2 : 1));
-  };
-
   return (
-    <div>
-      <p>Current Turn: Player {currentPlayerId}</p>
-      <Game playerId={currentPlayerId} turn={switchTurn}/>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/welcome" element={<WelcomePage />} />
+        <Route path="/game" element={<GamePage />} />
+        <Route path="/test-game" element={<Game playerId={1} />} />
+        {/* 👆 This is optional: direct test route for your Game component */}
+      </Routes>
+    </Router>
   );
 }
 

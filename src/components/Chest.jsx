@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import supabase from "./SUpabaseclient";
+import supabase from "../supabaseClient";
 
 function Communitychest({ triggered }) {
   const [card, setCard] = useState(null);

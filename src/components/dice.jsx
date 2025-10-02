@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import supabase from "./SUpabaseclient";
+import supabase from "../supabaseClient";
 import Draw_card from "./Card";
 import Property from "./Buyproperty";
 
@@ -9,9 +9,8 @@ function Game({ playerId }) {
   const [rolling, setRolling] = useState(false);
   const [triggerCard, setTriggerCard] = useState(false);
 
+  // 🎲 Utility: random number for dice
   const randomNumber = (min, max) => {
-    min = Math.ceil(min);
-    max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
@@ -20,8 +19,10 @@ function Game({ playerId }) {
     const newNumber2 = randomNumber(1, 6);
     setNumber1(newNumber1);
     setNumber2(newNumber2);
+
     const sum = newNumber1 + newNumber2;
 
+    // ✅ Fetch player position
     const { data, error } = await supabase
       .from("players")
       .select("position")
@@ -30,12 +31,14 @@ function Game({ playerId }) {
 
     if (error || !data) {
       console.error("Failed to fetch player position", error);
+      setRolling(false);
       return;
     }
 
     const currentPosition = data.position || 0;
     const newPosition = (currentPosition + sum) % 40;
 
+    // ✅ Update player position
     const { error: updateError } = await supabase
       .from("players")
       .update({ position: newPosition })
@@ -44,14 +47,17 @@ function Game({ playerId }) {
     if (updateError) {
       console.error("Failed to update position", updateError);
     } else {
-      alert(`You rolled ${newNumber1} and ${newNumber2}. New position: ${sum}`);
+      alert(
+        `You rolled ${newNumber1} and ${newNumber2}. New position: ${newPosition}`
+      );
     }
 
-   
+    // ✅ Trigger card/property check briefly
     setTriggerCard(true);
+    setTimeout(() => setTriggerCard(false), 500);
 
     if (newNumber1 === newNumber2) {
-      alert(`You rolled doubles! Roll again in 2 seconds...`);
+      alert("🎉 You rolled doubles! Roll again in 2 seconds...");
       setTimeout(() => {
         rollDice();
       }, 2000);
@@ -70,13 +76,20 @@ function Game({ playerId }) {
 
   return (
     <div>
-      <button onClick={handleRolling}>Roll dice</button>
+      <button onClick={handleRolling} disabled={rolling}>
+        {rolling ? "Rolling..." : "Roll Dice"}
+      </button>
 
-      
+      {/* 🎴 Triggered events */}
       <Draw_card triggered={triggerCard} playerId={playerId} />
-
-     
       <Property triggered={triggerCard} playerId={playerId} />
+
+      {/* 📝 Show dice results */}
+      {number1 && number2 && (
+        <p>
+          You rolled: 🎲 {number1} + {number2} = {number1 + number2}
+        </p>
+      )}
     </div>
   );
 }

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import supabase from "./SUpabaseclient";
+import supabase from "../supabaseClient";
 
 function Property({ playerId}) {
   const [property, setProperty] = useState(null);
-  const [player, setPlayer] = useState(null);
+  const [ setPlayer] = useState(null);
 
   useEffect(() => {
     if (!playerId) return;
