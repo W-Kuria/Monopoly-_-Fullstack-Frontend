@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import supabase from "./SUpabaseclient";
 
-function Property({ playerId, triggered }) {
+function Property({ playerId}) {
   const [property, setProperty] = useState(null);
   const [player, setPlayer] = useState(null);
 
   useEffect(() => {
-    if (!playerId || !triggered ) return;
+    if (!playerId) return;
 
     const fetchData = async () => {
      
@@ -103,9 +103,9 @@ function Property({ playerId, triggered }) {
     };
 
     fetchData();
-  }, [playerId, triggered]);
+  }, [playerId]);
 
-  if (!property ||!triggered) return null;
+  if (!property) return null;
 
   return (
     <div>
