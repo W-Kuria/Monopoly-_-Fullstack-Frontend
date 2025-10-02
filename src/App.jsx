@@ -1,19 +1,31 @@
-import React, { useState } from "react";
-import Game from "./dice";
+
+import { useState } from 'react';
+import WelcomePage from './components/WelcomePage';
+import GameBoard from './components/GameBoard'; 
+
 
 function App() {
+  const [gameStarted, setGameStarted] = useState(false);
+  const [instructionsViewed, setInstructionsViewed] = useState(false);
 
-  const [currentPlayerId, setCurrentPlayerId] = useState(1);
-
-  const switchTurn = () => {
-    setCurrentPlayerId((prev) => (prev === 1 ? 2 : 1));
-  };
+  const handleStart = () => setGameStarted(true);
+  const handleResume = () => setGameStarted(true);
 
   return (
-    <div>
-      <p>Current Turn: Player {currentPlayerId}</p>
-      <Game playerId={currentPlayerId} turn={switchTurn}/>
-    </div>
+    <>
+      {!gameStarted ? (
+        <WelcomePage
+          onStart={handleStart}
+          onResume={handleResume}
+          showResume={!!localStorage.getItem("players")} 
+          instructionsViewed={instructionsViewed}
+          setInstructionsViewed={setInstructionsViewed}
+        />
+
+      ) : (
+        <GameBoard />
+      )}
+    </>
   );
 }
 

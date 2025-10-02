@@ -1,56 +1,37 @@
 import React, { useEffect, useState } from "react";
-import supabase from "./SUpabaseclient";
+import supabase from "./Supabaseclient";
 
-function Communitychest({ triggered,playerId }) {
-  const [showCard, setShowCard] = useState(false);
-  const [cardText, setCardText] = useState('');
-
-  const chestCards = [
-    'Advance to GO (Collect $200)',
-    'Bank error in your favor. Collect $200',
-    'Doctor\'s fee. Pay $50',
-    'From sale of stock you get $50',
-    'Get out of Jail free',
-    'Holiday fund matures. Receive $100'
-  ];
+function Communitychest({ triggered }) {
+  const [card, setCard] = useState(null);
 
   useEffect(() => {
-  const handleCard = async () => {  
-    if (triggered) {
-      const randomCard = chestCards[Math.floor(Math.random() * chestCards.length)];
-      setCardText(randomCard);
-      setShowCard(true);
-      
-      // If it's the jail card, update database
-      if (randomCard === 'Get out of Jail free' && playerId) {
-        await supabase  
-          .from('players')
-          .update({ has_jail_card: true })
-          .eq('id', playerId);
+    const drawCard = async () => {
+      const { data, error } = await supabase
+        .from('community_chest_cards')
+        .select('description');
+      if (error) {
+        console.error('Failed to fetch cards:', error);
+        return;
       }
-      
-      setTimeout(() => setShowCard(false), 3000);
-    }
-  };
+      if (data && data.length > 0) {
+        const randomCard = data[Math.floor(Math.random() * data.length)];
+        setCard(randomCard);
+      }
+    };
 
-  handleCard(); 
-}, [triggered]);
-  if (!showCard) return null;
+    if (triggered) {
+      drawCard();
+    }
+  }, [triggered]);
 
   return (
-    <div style={{
-      position: 'fixed',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
-      background: 'lightblue',
-      padding: '20px',
-      border: '2px solid black',
-      borderRadius: '10px',
-      zIndex: 1000
-    }}>
-      <h3>Community Chest</h3>
-      <p>{cardText}</p>
+    <div>
+      <h1>Community Chest</h1>
+      {card ? (
+        <p>{card.description}</p>
+      ) : (
+        <p>Failed to draw a card</p>
+      )}
     </div>
   );
 }

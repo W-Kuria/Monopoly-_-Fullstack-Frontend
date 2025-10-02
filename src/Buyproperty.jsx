@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import supabase from "./SUpabaseclient";
+import supabase from "./Supabaseclient";
 
 function Property({ playerId}) {
   const [property, setProperty] = useState(null);

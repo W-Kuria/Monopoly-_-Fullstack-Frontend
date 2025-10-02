@@ -1,5 +1,6 @@
+
 import React, { useEffect, useState } from "react";
-import supabase from "./SUpabaseclient";
+import supabase from "./Supabaseclient";
 import Communitychest from "./Chest";
 import Chance from "./Chance";
 

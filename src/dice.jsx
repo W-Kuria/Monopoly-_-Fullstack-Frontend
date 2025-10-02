@@ -1,5 +1,6 @@
-import React, { useState,useEffect } from "react";
-import supabase from "./SUpabaseclient";
+import React from "react";
+import { useEffect,useState } from "react";
+import supabase from "./Supabaseclient";
 import Draw_card from "./Card";
 import Property from "./Buyproperty";
 import { sendToJail, getOutOfJail, payToGetOut } from "./Jail";
