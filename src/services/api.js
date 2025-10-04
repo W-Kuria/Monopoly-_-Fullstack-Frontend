@@ -1,25 +1,41 @@
 import axios from "axios";
 
-const API_URL = "http://127.0.0.1:5500/auth"; // Flask backend base URL
+// Base URLs
+const API_URL_AUTH = "http://127.0.0.1:5500/auth"; // for auth routes
+const API_URL_GAME = "http://127.0.0.1:5500/game"; // for game routes
+
+// Ensure JSON headers
+axios.defaults.headers.common["Content-Type"] = "application/json";
+axios.defaults.withCredentials = true; 
 
 // 🔑 Login
 export async function loginUser(credentials) {
-  // expects { email, password }
-  return await axios.post(`${API_URL}/login`, credentials);
+  return await axios.post(`${API_URL_AUTH}/login`, credentials);
 }
 
 // 📝 Register
 export async function registerUser(userData) {
   // expects { name, email, password }
-  return await axios.post(`${API_URL}/register`, userData);
+  return await axios.post(`${API_URL_AUTH}/register`, userData);
 }
 
-// 🎲 Roll dice
+// 🎲 Roll dice (expects { player_id })
 export async function rollDice(playerId) {
-  return await axios.post(`${API_URL}/roll`, { player_id: playerId });
+  return await axios.post(`${API_URL_GAME}/roll`, { player_id: playerId });
 }
 
-// 🎮 Fetch game state
-export async function getGameState(playerId) {
-  return await axios.get(`${API_URL}/game/${playerId}`);
+// 🎮 Fetch game by ID
+export async function getGameById(gameId) {
+  return await axios.get(`${API_URL_GAME}/${gameId}`);
+}
+
+// ➕ Create a new game
+export async function createGame(data) {
+  // expects { num_players, players: ["Alice", "Bob", ...], userId }
+  return await axios.post(`${API_URL_GAME}/create`, data);
+}
+
+// 📜 Fetch games for a specific user
+export async function fetchUserGames(userId) {
+  return await axios.get(`${API_URL_GAME}/user/${userId}`);
 }
