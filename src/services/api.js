@@ -18,6 +18,10 @@ export async function registerUser(userData) {
   // expects { name, email, password }
   return await axios.post(`${API_URL_AUTH}/register`, userData);
 }
+//Logout
+export async function logoutUser() {
+  return await axios.post("http://127.0.0.1:5500/auth/logout");
+}
 
 // 🎲 Roll dice (expects { player_id })
 export async function rollDice(playerId) {

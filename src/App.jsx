@@ -18,6 +18,7 @@ function App() {
         <Route path="/welcome" element={<WelcomePage />} />
         <Route path="/game" element={<GamePage />} />
         <Route path="/test-game" element={<Game playerId={1} />} />
+        <Route path="/game/:gameId" element={<GamePage />} />
         {/* 👆 This is optional: direct test route for your Game component */}
       </Routes>
     </Router>

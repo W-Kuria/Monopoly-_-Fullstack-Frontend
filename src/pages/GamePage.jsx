@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams,useNavigate } from "react-router-dom";
 import { getGameById, rollDice } from "../services/api";
 
 export default function GamePage() {
   const { gameId } = useParams(); // from /game/:id
   const [game, setGame] = useState(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadGame();
@@ -20,26 +21,36 @@ export default function GamePage() {
       console.error("Failed to load game:", err);
     }
   };
-
-  const handleRoll = async (playerId) => {
-    setLoading(true);
-    try {
-      const res = await rollDice(playerId); // backend expects playerId
-      setGame(res.data); // backend should return updated game state
-    } catch (err) {
-      console.error("Roll failed:", err);
-      alert("Could not roll dice.");
-    } finally {
-      setLoading(false);
-    }
+  const handleLogout = () => {
+    localStorage.removeItem("user"); 
+    navigate("/login");
   };
 
+  const handleRoll = async (playerId) => {
+  setLoading(true);
+  try {
+    await rollDice(playerId);     
+    const res = await getGameById(gameId);  
+    setGame(res.data);
+  } catch (err) {
+    console.error("Roll failed:", err);
+    alert("Could not roll dice.");
+  } finally {
+    setLoading(false);
+  }
+};
+
+ 
   if (!game) return <p>Loading game...</p>;
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <h2 className="text-3xl font-bold mb-6">🎲 Monopoly Game #{game.id}</h2>
-
+      <header>
+        <button onClick={handleLogout} className="btn-logout">
+          Logout
+        </button>
+      </header>
       <div className="bg-white p-6 rounded-2xl shadow-md max-w-2xl mx-auto">
         <p className="mb-4">
           Current Player:{" "}
