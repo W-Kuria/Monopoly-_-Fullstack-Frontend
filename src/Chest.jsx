@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import React, { useEffect, useState } from "react";
-import supabase from "./Supabaseclient";
+import supabase from "../Supabaseclient"; 
 
-function Communitychest({ triggered }) {
+
+function Communitychest({ triggered,playerId }) {
   const [showCard, setShowCard] = useState(false);
   const [cardText, setCardText] = useState('');
 
@@ -16,14 +16,26 @@ function Communitychest({ triggered }) {
   ];
 
   useEffect(() => {
+  const handleCard = async () => {  
     if (triggered) {
       const randomCard = chestCards[Math.floor(Math.random() * chestCards.length)];
       setCardText(randomCard);
       setShowCard(true);
+      
+      // If it's the jail card, update database
+      if (randomCard === 'Get out of Jail free' && playerId) {
+        await supabase  
+          .from('players')
+          .update({ has_jail_card: true })
+          .eq('id', playerId);
+      }
+      
       setTimeout(() => setShowCard(false), 3000);
     }
-  }, [triggered]);
+  };
 
+  handleCard(); 
+}, [triggered]);
   if (!showCard) return null;
 
   return (
