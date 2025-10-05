@@ -1,7 +1,7 @@
 // This file handles all communication with the Flask backend
 // It's like a messenger between your React app and the server
 
-const API_BASE_URL = 'http://localhost:5000'; // Your Flask server URL
+const API_BASE_URL = 'http://localhost:5500'; // Your Flask server URL
 
 class GameService {
   
