@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import supabase from "../Supabaseclient";
 import { sendToJail } from "./Jail";     
+import Draw_card from "./Card";
+import Property from "./Buyproperty";
 
-function Game({playerId,gameId}){
-    const [number1, setNumber1] = useState(null);
-    const [number2, setNumber2] = useState(null);
-    const[rolling,setRolling]=useState(false);
-    const [doublesCount, setDoublesCount] = useState(0);
+function Game({ playerId }) {
+  const [number1, setNumber1] = useState(null);
+  const [number2, setNumber2] = useState(null);
+  const [rolling, setRolling] = useState(false);
+  const [triggerCard, setTriggerCard] = useState(false);
+  const [doublesCount, setDoublesCount] = useState(0);
 
   const randomNumber = (min, max) => {
     min = Math.ceil(min);
@@ -14,24 +17,24 @@ function Game({playerId,gameId}){
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
-
-    const rollDice = async() => {
-    const newNumber1=randomNumber(1,6)
-    const newNumber2=randomNumber(1,6)
+  const rollDice = async () => {
+    const newNumber1 = randomNumber(1, 6);
+    const newNumber2 = randomNumber(1, 6);
     setNumber1(newNumber1);
-    setNumber2(newNumber2)
-    const sum=newNumber1+newNumber2;
+    setNumber2(newNumber2);
+    const sum = newNumber1 + newNumber2;
 
-    const{data,error}=await supabase
-    .from("players")
-    .select("position")
-    .eq("id",playerId)
-    .single();
-    
+    const { data, error } = await supabase
+      .from("players")
+      .select("position")
+      .eq("id", playerId)
+      .single();
+
     if (error || !data) {
       console.error("Failed to fetch player position", error);
       return;
     }
+
     const currentPosition = data.position || 0;
     const newPosition = (currentPosition + sum) % 40;
     // jail time
@@ -45,7 +48,8 @@ function Game({playerId,gameId}){
       .from("players")
       .update({ position: newPosition })
       .eq("id", playerId);
-      if (updateError) {
+
+    if (updateError) {
       console.error("Failed to update position", updateError);
     } else {
       // shows the position of player when successfull
@@ -82,12 +86,26 @@ else{
       setRolling(true);
       rollDice()
     }
-   }
-  
-  return(
+  };
+
+  const handleRolling = () => {
+    if (!rolling) {
+      setRolling(true);
+      rollDice();
+    }
+  };
+
+  return (
     <div>
-        <button onClick={handleRolling}>Roll dice</button>
+      <button onClick={handleRolling}>Roll dice</button>
+
+      
+      <Draw_card triggered={triggerCard} playerId={playerId} />
+
+     
+      <Property triggered={triggerCard} playerId={playerId} />
     </div>
-  )
-  
+  );
 }
+
+export default Game;

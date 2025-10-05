@@ -1,51 +1,55 @@
 import React, { useEffect, useState } from "react";
-import supabase from "../Supabaseclient";
+import supabase from "../SupabaseClient";
 import Communitychest from "./Chest";
 import Chance from "./Chance";
 
-function Draw_card({triggered}){  
-    const[showChancecard,setshowChancecard]=useState(false);
-    const[showCommunitychestcard,setshowCommunitychestcard]=useState(false)  
-    useEffect(()=>{
-        const Card_type=async()=>{
-            const {data,error}=await supabase
-            .from('players')
-            .select('position')
-            .limit(1);
-            if(error){
-                console.error("failed to fetch:",error);
-                return;
-            }
-            if(data&&data.length>0){
-                const position=data[0].position
+function Draw_card({ triggered = false, playerId = null }) {
+  const [showChancecard, setshowChancecard] = useState(false);
+  const [showCommunitychestcard, setshowCommunitychestcard] = useState(false);
 
-                if([7,22,36].includes(position)){
-                    setshowChancecard(true);
-                    setshowCommunitychestcard(false);
-                }
+  useEffect(() => {
+    const Card_type = async () => {
+      if (!playerId) {
+        console.warn("No playerId provided, skipping fetch.");
+        return;
+      }
 
-                else if([2,17,33].includes(position)){
-                    setshowChancecard(false);
-                    setshowCommunitychestcard(true);
-                }
-                else{
-                    setshowChancecard(false);
-                    setshowCommunitychestcard(false);
-                }
-            }          
-            };
-        
-            if(triggered){
-                Card_type()
-            }
-    },[triggered]);
-    return(
-        <div>
-           {showChancecard&&<Chance triggered={true} />} 
-           {showCommunitychestcard&&<Communitychest triggered={true} />}
-        </div>
-    )
+      const { data, error } = await supabase
+        .from("players")
+        .select("position")
+        .eq("id", playerId)
+        .single();
 
+      if (error) {
+        console.error("Failed to fetch player position:", error);
+        return;
+      }
+
+      const position = data?.position ?? 0;
+
+      if ([7, 22, 36].includes(position)) {
+        setshowChancecard(true);
+        setshowCommunitychestcard(false);
+      } else if ([2, 17, 33].includes(position)) {
+        setshowChancecard(false);
+        setshowCommunitychestcard(true);
+      } else {
+        setshowChancecard(false);
+        setshowCommunitychestcard(false);
+      }
+    };
+
+    if (triggered) {
+      Card_type();
+    }
+  }, [triggered, playerId]);
+
+  return (
+    <div>
+      {showChancecard && <Chance triggered={true} />}
+      {showCommunitychestcard && <Communitychest triggered={true} />}
+    </div>
+  );
 }
 
-export default Draw_card
+export default Draw_card;

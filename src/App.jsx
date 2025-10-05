@@ -1,40 +1,20 @@
-import { useState } from 'react'
-import GamePage from './components/GamePage'
-import GameLobby from './components/GameLobby'
-import './App.css'
+import React, { useState } from "react";
+import Game from "./dice";
 
 function App() {
-  const [currentGameId, setCurrentGameId] = useState(null)
-  const [playerId, setPlayerId] = useState(null)
 
-  // Handle when player joins a game
-  const handleJoinGame = (gameId, playerIdFromServer) => {
-    setCurrentGameId(gameId)
-    setPlayerId(playerIdFromServer)
-  }
+  const [currentPlayerId, setCurrentPlayerId] = useState(1);
 
-  // Handle leaving game (back to lobby)
-  const handleLeaveGame = () => {
-    setCurrentGameId(null)
-    setPlayerId(null)
-    localStorage.removeItem('currentGameId')
-    localStorage.removeItem('playerId')
-    localStorage.removeItem('playerName')
-  }
+  const switchTurn = () => {
+    setCurrentPlayerId((prev) => (prev === 1 ? 2 : 1));
+  };
 
   return (
-    <div className="App">
-      {currentGameId ? (
-        <GamePage 
-          gameId={currentGameId} 
-          playerId={playerId}
-          onLeaveGame={handleLeaveGame}
-        />
-      ) : (
-        <GameLobby onJoinGame={handleJoinGame} />
-      )}
+    <div>
+      <p>Current Turn: Player {currentPlayerId}</p>
+      <Game playerId={currentPlayerId} turn={switchTurn}/>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

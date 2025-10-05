@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import React, { useEffect, useState } from "react";
+import supabase from "./Supabaseclient";
 
 function Chance({ triggered }) {
   const [showCard, setShowCard] = useState(false);
