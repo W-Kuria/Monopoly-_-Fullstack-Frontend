@@ -61,3 +61,38 @@ export async function getBoard(gameId) {
   return await axios.get(`${API_URL_GAME}/game/${gameId}/board`);
 }
 
+// 🏠 Buy property
+export async function buyProperty(gameId, playerId, tile_position) {
+  return await axios.post(`${API_URL_GAME}/${gameId}/buy`, { player_id: playerId, tile_position });
+}
+
+// 🎲 Draw chance
+export async function drawChance(gameId, playerId) {
+  return await axios.post(`${API_URL_GAME}/${gameId}/chance`, { player_id: playerId });
+}
+
+// 💳 Draw community chest
+export async function drawCommunity(gameId, playerId) {
+  return await axios.post(`${API_URL_GAME}/${gameId}/community`, { player_id: playerId });
+}
+
+// 🚨 Jail
+export async function handleJail(gameId, playerId, action) {
+  return await axios.post(`${API_URL_GAME}/${gameId}/jail`, { player_id: playerId, action });
+}
+
+// 💀 Bankruptcy
+export async function bankruptPlayer(gameId, playerId) {
+  return await axios.post(`${API_URL_GAME}/${gameId}/bankrupt`, { player_id: playerId });
+}
+
+// 💰 Pay rent to property owner
+export async function handleRentPayment(gameId, playerId, propertyId) {
+  return await axios.post(`${API_URL_GAME}/${gameId}/rent`, {
+    player_id: playerId,
+    property_id: propertyId,
+  });
+}
+
+
+
