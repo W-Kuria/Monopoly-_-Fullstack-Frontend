@@ -4,7 +4,7 @@ This is the frontend of a fullstack Monopoly game built using **React** and **Vi
 
 ---
 
-## 🧰 Tech Stack
+##  Tech Stack
 
 - **React** – UI library for building interactive components
 - **Vite** – Lightning-fast build tool with HMR
@@ -16,14 +16,14 @@ This is the frontend of a fullstack Monopoly game built using **React** and **Vi
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ├── public/ # Static assets ├── src/ │ ├── assets/ # Images and icons │ ├── components/ # Reusable UI components │ ├── pages/ # Route-based views │ ├── services/ # API calls and endpoints │ ├── utils/ # Helper functions │ ├── App.jsx # Root component │ └── main.jsx # Entry point ├── .eslintrc.cjs # ESLint configuration ├── vite.config.js # Vite build settings ├── package.json # Dependencies and scripts └── README.md # Project documentation
 
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 
@@ -36,11 +36,11 @@ This is the frontend of a fullstack Monopoly game built using **React** and **Vi
 git clone https://github.com/your-username/Monopoly-_-Fullstack-Frontend.git
 cd Monopoly-_-Fullstack-Frontend
 npm install
+```
 
- ### Development
   
 
- 🔌 API Integration
+### API Integration
 The frontend communicates with a backend API for:
 
 User authentication (/auth/login, /auth/register)
@@ -52,6 +52,5 @@ Chat functionality (/chat/send, /chat/history)
 Configure the base URL in src/services/api.js.
 
 
-
-📄 License
+ ### License
  This project was done by Brenda, Jusin and Roy.
