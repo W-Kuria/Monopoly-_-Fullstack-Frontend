@@ -44,7 +44,7 @@ export default function BuyProperty({ gameId, player, tile, onClose, onPurchase 
             <p>
               {canAfford
                 ? "Would you like to purchase this property?"
-                : "You don’t have enough money to buy this property."}
+                : "You don't have enough money to buy this property."}
             </p>
             <div className="flex justify-center space-x-4">
               <button

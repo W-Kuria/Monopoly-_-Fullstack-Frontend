@@ -1,7 +1,14 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getGameById, rollDice } from "../services/api";
-import bgImage from "../assets/pexels-suzyhazelwood-1329644.jpg"; 
+import {
+  getGameById,
+  rollDice,
+  buyProperty,
+  drawChance,
+  drawCommunity,
+  handleJail,
+} from "../services/api";
+import bgImage from "../assets/pexels-suzyhazelwood-1329644.jpg";
 
 export default function GamePage() {
   const { gameId } = useParams();
@@ -11,7 +18,7 @@ export default function GamePage() {
   const logRef = useRef(null);
   const navigate = useNavigate();
 
-  const PLAYER_COLORS = ["#6A5ACD", "#0096C7", "#06D6A0", "#FFB703"]; // elegant soft tones
+  const PLAYER_COLORS = ["#6A5ACD", "#0096C7", "#06D6A0", "#FFB703"];
 
   const normalizeGame = (data) => {
     if (!data) return null;
@@ -69,13 +76,53 @@ export default function GamePage() {
 
     setLoading(true);
     try {
+      // Roll dice via backend
       const res = await rollDice(gameId, playerId);
-      const newGame = normalizeGame(res.data);
-      const total = res.data.dice?.reduce((a, b) => a + b, 0) ?? 0;
-      addToLog(`🎲 ${player.name} rolled ${res.data.dice.join(" + ")} = ${total}`);
-      const newPos = newGame.players.find((p) => p.id === playerId)?.position;
+      const newGame = normalizeGame(res.data.game || res.data);
+      const diceValues = res.data.dice ?? [];
+      const total = diceValues.reduce((a, b) => a + b, 0);
+
+      addToLog(`🎲 ${player.name} rolled ${diceValues.join(" + ")} = ${total}`);
+
+      // Get updated position and tile info
+      const newPos = newGame.players.find((p) => p.id === playerId)?.position ?? 0;
       const landedTile = BOARD_TILES[newPos]?.name ?? `Tile #${newPos}`;
       addToLog(`📍 ${player.name} landed on ${landedTile}`);
+
+      //  Handle special tiles
+      if (landedTile.includes("Chance")) {
+        const resChance = await drawChance(gameId, playerId);
+        addToLog(` Chance: ${resChance.data.message || "You drew a card!"}`);
+        setGame(normalizeGame(resChance.data.game || newGame));
+      } 
+      else if (landedTile.includes("Community")) {
+        const resComm = await drawCommunity(gameId, playerId);
+        addToLog(` Community Chest: ${resComm.data.message || "You drew a card!"}`);
+        setGame(normalizeGame(resComm.data.game || newGame));
+      } 
+      else if (landedTile === "Go To Jail") {
+        const resJail = await handleJail(gameId, playerId, "go_to_jail");
+        addToLog(` ${player.name} was sent directly to Jail!`);
+        setGame(normalizeGame(resJail.data.game || newGame));
+      } 
+      else if (landedTile === "Jail") {
+        addToLog(` ${player.name} is just visiting Jail.`);
+      } 
+      else if (BOARD_TILES[newPos]?.price) {
+        //  Property tile — prompt to buy
+        const buy = window.confirm(
+          `${player.name} landed on ${landedTile}.\nWould you like to buy it for $${BOARD_TILES[newPos].price}?`
+        );
+        if (buy) {
+          const resBuy = await buyProperty(gameId, playerId, newPos);
+          addToLog(` ${player.name} bought ${landedTile} for $${BOARD_TILES[newPos].price}!`);
+          setGame(normalizeGame(resBuy.data.game || newGame));
+        } else {
+          addToLog(` ${player.name} skipped buying ${landedTile}.`);
+        }
+      }
+
+      // Update game state even if no special tile
       setGame(newGame);
     } catch (err) {
       console.error("Roll failed:", err);

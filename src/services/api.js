@@ -10,7 +10,7 @@ axios.defaults.headers.common["Content-Type"] = "application/json";
 axios.defaults.withCredentials = true;
 
 // =============================
-// 🔑 AUTH ROUTES
+//  AUTH ROUTES
 // =============================
 
 // Login user
@@ -31,14 +31,16 @@ export async function logoutUser() {
 }
 
 // =============================
-// 🎮 GAME ROUTES
+//  GAME ROUTES
 // =============================
 
-// 🎲 Roll dice for a specific player in a specific game
+//  Roll dice for a specific player in a specific game
 export async function rollDice(gameId, playerId) {
   // matches backend: /game/<int:game_id>/roll
   return await axios.post(`${API_URL_GAME}/${gameId}/roll`, { player_id: playerId });
 }
+
+
 
 // Fetch full game by ID
 export async function getGameById(gameId) {
@@ -61,32 +63,32 @@ export async function getBoard(gameId) {
   return await axios.get(`${API_URL_GAME}/game/${gameId}/board`);
 }
 
-// 🏠 Buy property
+//  Buy property
 export async function buyProperty(gameId, playerId, tile_position) {
   return await axios.post(`${API_URL_GAME}/${gameId}/buy`, { player_id: playerId, tile_position });
 }
 
-// 🎲 Draw chance
+//  Draw chance
 export async function drawChance(gameId, playerId) {
   return await axios.post(`${API_URL_GAME}/${gameId}/chance`, { player_id: playerId });
 }
 
-// 💳 Draw community chest
+//  Draw community chest
 export async function drawCommunity(gameId, playerId) {
   return await axios.post(`${API_URL_GAME}/${gameId}/community`, { player_id: playerId });
 }
 
-// 🚨 Jail
+//  Jail
 export async function handleJail(gameId, playerId, action) {
   return await axios.post(`${API_URL_GAME}/${gameId}/jail`, { player_id: playerId, action });
 }
 
-// 💀 Bankruptcy
+//  Bankruptcy
 export async function bankruptPlayer(gameId, playerId) {
   return await axios.post(`${API_URL_GAME}/${gameId}/bankrupt`, { player_id: playerId });
 }
 
-// 💰 Pay rent to property owner
+//  Pay rent to property owner
 export async function handleRentPayment(gameId, playerId, propertyId) {
   return await axios.post(`${API_URL_GAME}/${gameId}/rent`, {
     player_id: playerId,

@@ -69,7 +69,7 @@ export default function WelcomePage() {
 
       alert(`Game created with ID: ${newGame.id}`);
 
-      // ✅ Update games state so dropdown shows it immediately
+      // Update games state so dropdown shows it immediately
       setGames((prev) => [...prev, newGame]);
 
       // Step 4: Redirect to the game
