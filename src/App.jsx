@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import GameStatus from "./components/GameStatus"
+import GamePage from "./components/GamePage";
+import GameLobby from "./components/GameLobby";
 import Game from "./dice";
 
 function App() {
@@ -11,6 +14,9 @@ function App() {
 
   return (
     <div>
+      <GamePage/>
+      <GameStatus/>
+
       <p>Current Turn: Player {currentPlayerId}</p>
       <Game playerId={currentPlayerId} turn={switchTurn}/>
     </div>

@@ -88,13 +88,6 @@ else{
     }
   };
 
-  const handleRolling = () => {
-    if (!rolling) {
-      setRolling(true);
-      rollDice();
-    }
-  };
-
   return (
     <div>
       <button onClick={handleRolling}>Roll dice</button>
