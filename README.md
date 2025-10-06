@@ -1,16 +1,57 @@
-# React + Vite
+# 🎲 Monopoly - Fullstack Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend of a fullstack Monopoly game built using **React** and **Vite**. It provides a fast, interactive, and visually engaging experience for players, connecting to a backend API to support real-time gameplay, user authentication, and dynamic board interactions.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🧰 Tech Stack
 
-## React Compiler
+- **React** – UI library for building interactive components
+- **Vite** – Lightning-fast build tool with HMR
+- **JavaScript** – Core language for logic and interactivity
+- **CSS** – Styling and layout
+- **React Router** – Client-side routing
+- **Axios** – API communication
+- **ESLint** – Code linting and quality enforcement
 
-The React Compiler is not enabled on this template. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 📁 Project Structure
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+├── public/ # Static assets ├── src/ │ ├── assets/ # Images and icons │ ├── components/ # Reusable UI components │ ├── pages/ # Route-based views │ ├── services/ # API calls and endpoints │ ├── utils/ # Helper functions │ ├── App.jsx # Root component │ └── main.jsx # Entry point ├── .eslintrc.cjs # ESLint configuration ├── vite.config.js # Vite build settings ├── package.json # Dependencies and scripts └── README.md # Project documentation
+
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js (v18+ recommended)
+- npm or yarn
+
+### Installation
+
+```bash
+git clone https://github.com/your-username/Monopoly-_-Fullstack-Frontend.git
+cd Monopoly-_-Fullstack-Frontend
+npm install
+
+ ### Development
+  
+
+ 🔌 API Integration
+The frontend communicates with a backend API for:
+
+User authentication (/auth/login, /auth/register)
+
+Game state (/game/start, /game/state, /game/action)
+
+Chat functionality (/chat/send, /chat/history)
+
+Configure the base URL in src/services/api.js.
+
+
+
+📄 License
+ This project was done by Brenda, Jusin and Roy.
