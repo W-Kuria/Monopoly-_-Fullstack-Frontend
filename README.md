@@ -47,15 +47,16 @@ The goal is to recreate the Monopoly experience digitally while maintaining the 
 ```bash
 git clone https://github.com/yourusername/Monopoly-_-Fullstack-Frontend.git
 cd Monopoly-_-Fullstack-Frontend
-2. Install Dependencies
-bash
-Copy code
+```
+### 2. Install Dependencies
+```bash
 npm install
-3. Set Up Environment Variables
+```
+### 3. Set Up Environment Variables
 Create a .env file in the project root with:
 
 ini
-Copy code
+Copy code:
 VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 VITE_API_BASE_URL=http://localhost:5000
@@ -66,18 +67,16 @@ Replace VITE_API_BASE_URL with your Flask backend URL.
 
 You can use a deployed backend for production mode.
 
-4. Start the Development Server
-bash
-Copy code
+### 4. Start the Development Server
+```bash
 npm run dev
+```
 Open your browser and navigate to:
 
-arduino
-Copy code
 http://localhost:5173
-🗂 Folder Structure
-php
-Copy code
+
+### 🗂 Folder Structure
+
 monopoly-frontend/
 │
 ├── public/                 # Public assets (favicon, images, etc.)
@@ -97,23 +96,23 @@ monopoly-frontend/
 ├── eslint.config.js
 └── README.md
 
- Key Components**
+ ### Key Components**
 
- App.jsx:
+ ## App.jsx:
 Handles routing, game state management, and board display. It acts as the central control for the Monopoly UI.
 
- components/
+ ## components folder
 Handle the game logic(Property,jail,Rent e.t.c)
 
- supabaseClient.js
+ ## supabaseClient.js
 Initializes and configures Supabase for authentication and user sessions.
 
 
- Development Notes**
+ ### Development Notes
 Ensure your Flask backend is running before starting the frontend.
 
 
- Contributors**
+ ### Contributors
 Brenda Njaramba, Justine Gichure and Roy Moen
 
 and the Monopoly project team (UI & gameplay integration).
